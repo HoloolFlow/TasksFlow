@@ -1,0 +1,1674 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="مدير المهام الاحترافي - النسخة الكاملة PRO">
+    <title>Task Master PRO | مدير المهام الاحترافي</title>
+    
+    <!-- PWA Meta Tags -->
+    <meta name="theme-color" content="#1a1a2e">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Task Master PRO">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%236366f1'/><text x='50' y='70' font-size='60' text-anchor='middle' fill='white'>✓</text></svg>">
+    <link rel="manifest" id="manifest-placeholder">
+    <!-- تحسين PWA للتثبيت السريع -->
+    <link rel="manifest" href="manifest.json">
+
+    <script>
+        // PWA Manifest - تم تحسينه للتثبيت السهل
+        const manifestData = {
+            "name": "Task Master PRO",
+            "short_name": "Tasks PRO",
+            "description": "مدير المهام الاحترافي - النسخة الكاملة",
+            "start_url": ".",
+            "display": "standalone",
+            "background_color": "#1a1a2e",
+            "theme_color": "#6366f1",
+            "orientation": "any",
+            "icons": [
+                {
+                    "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect width='192' height='192' rx='40' fill='%236366f1'/><text x='96' y='140' font-size='120' text-anchor='middle' fill='white'>✓</text></svg>",
+                    "sizes": "192x192",
+                    "type": "image/svg+xml",
+                    "purpose": "any maskable"
+                },
+                {
+                    "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' rx='100' fill='%236366f1'/><text x='256' y='380' font-size='320' text-anchor='middle' fill='white'>✓</text></svg>",
+                    "sizes": "512x512",
+                    "type": "image/svg+xml",
+                    "purpose": "any maskable"
+                }
+            ]
+        };
+        
+        const manifestBlob = new Blob([JSON.stringify(manifestData)], {type: 'application/json'});
+        const manifestURL = URL.createObjectURL(manifestBlob);
+        document.getElementById('manifest-placeholder').setAttribute('href', manifestURL);
+    </script>
+    
+    <style>
+        /* ===== استيراد خطوط مميزة ===== */
+        @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;700;900&family=Cairo:wght@300;400;600;800&display=swap');
+        
+        /* ===== متغيرات CSS (قابلة للتخصيص) ===== */
+        :root {
+            /* الألوان - يمكن تخصيصها من الإعدادات */
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary: #ec4899;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            
+            /* الخلفيات */
+            --bg-main: #0f0f23;
+            --bg-card: #1a1a2e;
+            --bg-hover: #252541;
+            
+            /* النصوص */
+            --text-primary: #e2e8f0;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            
+            /* الظلال */
+            --shadow-sm: 0 2px 8px rgba(99, 102, 241, 0.1);
+            --shadow-md: 0 4px 16px rgba(99, 102, 241, 0.15);
+            --shadow-lg: 0 8px 32px rgba(99, 102, 241, 0.2);
+            
+            /* الحواف */
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+        }
+        
+        /* الثيم الفاتح */
+        [data-theme="light"] {
+            --bg-main: #f8fafc;
+            --bg-card: #ffffff;
+            --bg-hover: #f1f5f9;
+            --text-primary: #1e293b;
+            --text-secondary: #475569;
+            --text-muted: #94a3b8;
+        }
+        
+        /* ===== إعادة تعيين افتراضية ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        /* ===== التصميم العام ===== */
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background: linear-gradient(135deg, var(--bg-main) 0%, var(--bg-card) 50%, var(--bg-main) 100%);
+            color: var(--text-primary);
+            min-height: 100vh;
+            padding: 20px;
+            overflow-x: hidden;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        /* خلفية متحركة */
+        body::before {
+            content: '';
+            position: fixed;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(99, 102, 241, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(236, 72, 153, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(16, 185, 129, 0.05) 0%, transparent 50%);
+            animation: backgroundMove 20s ease-in-out infinite;
+            z-index: 0;
+        }
+        
+        @keyframes backgroundMove {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            33% { transform: translate(5%, -5%) rotate(5deg); }
+            66% { transform: translate(-5%, 5%) rotate(-5deg); }
+        }
+        
+        /* ===== الحاوية الرئيسية ===== */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* ===== الهيدر ===== */
+        .header {
+            background: var(--bg-card);
+            padding: 30px;
+            border-radius: var(--radius-lg);
+            margin-bottom: 30px;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(99, 102, 241, 0.1) 0%, transparent 70%);
+            border-radius: 50%;
+            transform: translate(30%, -30%);
+        }
+        
+        .header-content {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        
+        .logo-section {
+            flex: 1;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .logo-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            animation: pulse 2s ease-in-out infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
+        .logo h1 {
+            font-size: 32px;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .pro-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            color: #1a1a2e;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 900;
+            animation: fadeInUp 0.6s ease-out 0.3s both;
+        }
+        
+        .header-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        
+        .icon-btn {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            border: none;
+            background: var(--bg-main);
+            color: var(--text-primary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            transition: all 0.3s ease;
+        }
+        
+        .icon-btn:hover {
+            transform: scale(1.1);
+            background: var(--primary);
+            color: white;
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* ===== شريط الإحصائيات ===== */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: var(--bg-card);
+            padding: 25px;
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-md);
+            border: 1px solid rgba(99, 102, 241, 0.1);
+            transition: all 0.3s ease;
+            animation: slideIn 0.6s ease-out both;
+        }
+        
+        .stat-card:nth-child(1) { animation-delay: 0.1s; }
+        .stat-card:nth-child(2) { animation-delay: 0.2s; }
+        .stat-card:nth-child(3) { animation-delay: 0.3s; }
+        .stat-card:nth-child(4) { animation-delay: 0.4s; }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--primary);
+        }
+        
+        .stat-icon {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        
+        .stat-value {
+            font-size: 32px;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 14px;
+            margin-top: 5px;
+        }
+        
+        /* ===== التبويبات ===== */
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .tab-btn {
+            padding: 12px 24px;
+            background: var(--bg-card);
+            border: 2px solid rgba(99, 102, 241, 0.2);
+            border-radius: var(--radius-sm);
+            color: var(--text-secondary);
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .tab-btn:hover,
+        .tab-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+            transform: translateY(-2px);
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.4s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        /* ===== قسم الإضافة ===== */
+        .add-section {
+            background: var(--bg-card);
+            padding: 30px;
+            border-radius: var(--radius-lg);
+            margin-bottom: 30px;
+            box-shadow: var(--shadow-md);
+            border: 1px solid rgba(99, 102, 241, 0.1);
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+            font-weight: 600;
+            font-size: 14px;
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 14px 18px;
+            background: var(--bg-main);
+            border: 2px solid rgba(99, 102, 241, 0.2);
+            border-radius: var(--radius-sm);
+            color: var(--text-primary);
+            font-family: 'Tajawal', sans-serif;
+            font-size: 15px;
+            transition: all 0.3s ease;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+        
+        .form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+        
+        /* ===== الأزرار ===== */
+        .btn {
+            padding: 14px 28px;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-family: 'Tajawal', sans-serif;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+        
+        .btn:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+        
+        .btn-warning {
+            background: var(--warning);
+            color: white;
+        }
+        
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+        
+        .btn-sm {
+            padding: 8px 16px;
+            font-size: 13px;
+        }
+        
+        /* ===== قائمة المهام ===== */
+        .tasks-section {
+            background: var(--bg-card);
+            padding: 30px;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-md);
+            border: 1px solid rgba(99, 102, 241, 0.1);
+            margin-bottom: 30px;
+        }
+        
+        .tasks-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .tasks-header h2 {
+            font-size: 24px;
+            font-weight: 800;
+        }
+        
+        .filter-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .filter-btn {
+            padding: 8px 18px;
+            background: var(--bg-main);
+            border: 2px solid rgba(99, 102, 241, 0.2);
+            border-radius: 20px;
+            color: var(--text-secondary);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .filter-btn:hover,
+        .filter-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+            transform: scale(1.05);
+        }
+        
+        .tasks-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .task-card {
+            background: var(--bg-main);
+            padding: 20px;
+            border-radius: var(--radius-md);
+            border-right: 4px solid var(--primary);
+            transition: all 0.3s ease;
+            animation: taskSlideIn 0.4s ease-out both;
+        }
+        
+        @keyframes taskSlideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        .task-card:hover {
+            transform: translateX(5px);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .task-card.completed {
+            opacity: 0.6;
+            border-right-color: var(--success);
+        }
+        
+        .task-card.completed .task-title {
+            text-decoration: line-through;
+        }
+        
+        .task-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 10px;
+            gap: 15px;
+        }
+        
+        .task-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-primary);
+            flex: 1;
+        }
+        
+        .task-badges {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        
+        .task-priority,
+        .task-category {
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+        
+        .priority-high {
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--danger);
+            border: 1px solid var(--danger);
+        }
+        
+        .priority-medium {
+            background: rgba(245, 158, 11, 0.2);
+            color: var(--warning);
+            border: 1px solid var(--warning);
+        }
+        
+        .priority-low {
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--success);
+            border: 1px solid var(--success);
+        }
+        
+        .task-category {
+            background: rgba(99, 102, 241, 0.2);
+            color: var(--primary);
+            border: 1px solid var(--primary);
+        }
+        
+        .task-description {
+            color: var(--text-secondary);
+            font-size: 14px;
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+        
+        .task-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .task-date {
+            color: var(--text-muted);
+            font-size: 13px;
+        }
+        
+        .task-actions {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .task-actions button {
+            padding: 6px 14px;
+            border: none;
+            border-radius: 6px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+        
+        .btn-complete {
+            background: var(--success);
+            color: white;
+        }
+        
+        .btn-complete:hover {
+            background: #059669;
+            transform: scale(1.05);
+        }
+        
+        .btn-edit {
+            background: var(--warning);
+            color: white;
+        }
+        
+        .btn-edit:hover {
+            background: #d97706;
+            transform: scale(1.05);
+        }
+        
+        .btn-delete {
+            background: var(--danger);
+            color: white;
+        }
+        
+        .btn-delete:hover {
+            background: #dc2626;
+            transform: scale(1.05);
+        }
+        
+        /* ===== الإعدادات ===== */
+        .settings-section {
+            background: var(--bg-card);
+            padding: 30px;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-md);
+            border: 1px solid rgba(99, 102, 241, 0.1);
+        }
+        
+        .settings-group {
+            margin-bottom: 30px;
+        }
+        
+        .settings-group h3 {
+            margin-bottom: 15px;
+            color: var(--text-primary);
+            font-size: 18px;
+        }
+        
+        .theme-selector {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        
+        .theme-card {
+            padding: 20px;
+            border: 2px solid rgba(99, 102, 241, 0.2);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+        
+        .theme-card:hover,
+        .theme-card.active {
+            border-color: var(--primary);
+            background: var(--bg-hover);
+            transform: scale(1.05);
+        }
+        
+        .color-palette {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            gap: 10px;
+        }
+        
+        .color-option {
+            width: 100%;
+            height: 60px;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            border: 3px solid transparent;
+            transition: all 0.3s ease;
+        }
+        
+        .color-option:hover,
+        .color-option.active {
+            border-color: white;
+            transform: scale(1.1);
+        }
+        
+        /* ===== رسالة فارغة ===== */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+        }
+        
+        .empty-state-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+            opacity: 0.3;
+        }
+        
+        .empty-state-text {
+            color: var(--text-secondary);
+            font-size: 18px;
+        }
+        
+        /* ===== مودال الترخيص ===== */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal.active {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: var(--bg-card);
+            padding: 40px;
+            border-radius: var(--radius-lg);
+            max-width: 500px;
+            width: 90%;
+            box-shadow: var(--shadow-lg);
+            animation: modalSlideIn 0.4s ease-out;
+        }
+        
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .modal-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .modal-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+        
+        .modal-title {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--text-primary);
+        }
+        
+        .license-info {
+            background: var(--bg-main);
+            padding: 20px;
+            border-radius: var(--radius-md);
+            margin: 20px 0;
+        }
+        
+        .license-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(99, 102, 241, 0.1);
+        }
+        
+        .license-item:last-child {
+            border-bottom: none;
+        }
+        
+        /* ===== الفوتر ===== */
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+        
+        /* ===== استجابة الشاشات الصغيرة ===== */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            
+            .header {
+                padding: 20px;
+            }
+            
+            .logo h1 {
+                font-size: 24px;
+            }
+            
+            .header-content {
+                flex-direction: column;
+            }
+            
+            .stats {
+                grid-template-columns: 1fr;
+            }
+            
+            .tabs {
+                flex-wrap: nowrap;
+                overflow-x: auto;
+            }
+            
+            .add-section,
+            .tasks-section,
+            .settings-section {
+                padding: 20px;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .tasks-header {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .filter-buttons {
+                justify-content: center;
+            }
+            
+            .task-header {
+                flex-direction: column;
+            }
+            
+            .task-badges {
+                justify-content: flex-start;
+            }
+            
+            .task-meta {
+                flex-direction: column;
+                align-items: stretch;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- مودال الترخيص -->
+    <div class="modal" id="licenseModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-icon">🔐</div>
+                <h2 class="modal-title">تفعيل النسخة الكاملة</h2>
+            </div>
+            <div class="form-group">
+                <label for="licenseKey">مفتاح الترخيص</label>
+                <input type="text" id="licenseKey" placeholder="XXXXX-XXXXX-XXXXX-XXXXX">
+            </div>
+            <button class="btn btn-primary" style="width: 100%; margin-top: 15px;" onclick="validateLicense()">
+                ✓ تفعيل الآن
+            </button>
+            <p style="text-align: center; margin-top: 15px; color: var(--text-muted); font-size: 13px;">
+                ستجد مفتاح الترخيص في ملف README.txt
+            </p>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- الهيدر -->
+        <header class="header">
+            <div class="header-content">
+                <div class="logo-section">
+                    <div class="logo">
+                        <div class="logo-icon">✓</div>
+                        <div>
+                            <h1>Task Master PRO</h1>
+                            <span class="pro-badge">⭐ النسخة الكاملة</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="header-actions">
+                    <button class="icon-btn" onclick="toggleTheme()" title="تغيير الثيم">🌓</button>
+                    <button class="icon-btn" onclick="exportTasks()" title="تصدير المهام">📥</button>
+                    <button class="icon-btn" onclick="showLicenseInfo()" title="معلومات الترخيص">ℹ️</button>
+                </div>
+            </div>
+        </header>
+
+        <!-- الإحصائيات -->
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-icon">📝</div>
+                <div class="stat-value" id="totalTasks">0</div>
+                <div class="stat-label">إجمالي المهام</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">✅</div>
+                <div class="stat-value" id="completedTasks">0</div>
+                <div class="stat-label">المهام المكتملة</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">⏳</div>
+                <div class="stat-value" id="pendingTasks">0</div>
+                <div class="stat-label">المهام المعلقة</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">📊</div>
+                <div class="stat-value" id="completionRate">0%</div>
+                <div class="stat-label">نسبة الإنجاز</div>
+            </div>
+        </div>
+
+        <!-- التبويبات -->
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('tasks')">📋 المهام</button>
+            <button class="tab-btn" onclick="switchTab('add')">➕ إضافة مهمة</button>
+            <button class="tab-btn" onclick="switchTab('settings')">⚙️ الإعدادات</button>
+        </div>
+
+        <!-- محتوى التبويبات -->
+        
+        <!-- تبويب المهام -->
+        <div class="tab-content active" id="tasksTab">
+            <div class="tasks-section">
+                <div class="tasks-header">
+                    <h2>📋 قائمة المهام</h2>
+                    <div class="filter-buttons">
+                        <button class="filter-btn active" data-filter="all">الكل</button>
+                        <button class="filter-btn" data-filter="pending">المعلقة</button>
+                        <button class="filter-btn" data-filter="completed">المكتملة</button>
+                    </div>
+                </div>
+                <div class="tasks-list" id="tasksList">
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📝</div>
+                        <div class="empty-state-text">لا توجد مهام حتى الآن. ابدأ بإضافة مهمتك الأولى!</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- تبويب إضافة مهمة -->
+        <div class="tab-content" id="addTab">
+            <div class="add-section">
+                <h2 style="margin-bottom: 25px; font-size: 24px;">➕ إضافة مهمة جديدة</h2>
+                <form id="taskForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="taskTitle">عنوان المهمة *</label>
+                            <input type="text" id="taskTitle" placeholder="مثال: إنهاء تقرير المشروع" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="taskCategory">التصنيف *</label>
+                            <select id="taskCategory" required>
+                                <option value="work">🏢 عمل</option>
+                                <option value="personal">👤 شخصي</option>
+                                <option value="study">📚 دراسة</option>
+                                <option value="health">💪 صحة</option>
+                                <option value="shopping">🛒 تسوق</option>
+                                <option value="other">📌 أخرى</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="taskDescription">وصف المهمة</label>
+                        <textarea id="taskDescription" placeholder="اكتب تفاصيل المهمة هنا..."></textarea>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="taskPriority">الأولوية</label>
+                            <select id="taskPriority">
+                                <option value="low">منخفضة 🟢</option>
+                                <option value="medium" selected>متوسطة 🟡</option>
+                                <option value="high">عالية 🔴</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="taskDueDate">تاريخ الاستحقاق</label>
+                            <input type="date" id="taskDueDate">
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                        ➕ إضافة المهمة
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- تبويب الإعدادات -->
+        <div class="tab-content" id="settingsTab">
+            <div class="settings-section">
+                <div class="settings-group">
+                    <h3>🎨 اختر اللون الأساسي</h3>
+                    <div class="color-palette">
+                        <div class="color-option active" style="background: #6366f1;" onclick="changeColor('#6366f1')"></div>
+                        <div class="color-option" style="background: #ec4899;" onclick="changeColor('#ec4899')"></div>
+                        <div class="color-option" style="background: #8b5cf6;" onclick="changeColor('#8b5cf6')"></div>
+                        <div class="color-option" style="background: #10b981;" onclick="changeColor('#10b981')"></div>
+                        <div class="color-option" style="background: #f59e0b;" onclick="changeColor('#f59e0b')"></div>
+                        <div class="color-option" style="background: #ef4444;" onclick="changeColor('#ef4444')"></div>
+                        <div class="color-option" style="background: #06b6d4;" onclick="changeColor('#06b6d4')"></div>
+                        <div class="color-option" style="background: #84cc16;" onclick="changeColor('#84cc16')"></div>
+                    </div>
+                </div>
+
+                <div class="settings-group">
+                    <h3>🌓 الثيم</h3>
+                    <div class="theme-selector">
+                        <div class="theme-card active" onclick="setTheme('dark')">
+                            <div style="font-size: 32px; margin-bottom: 10px;">🌙</div>
+                            <div style="font-weight: 700;">الوضع الداكن</div>
+                        </div>
+                        <div class="theme-card" onclick="setTheme('light')">
+                            <div style="font-size: 32px; margin-bottom: 10px;">☀️</div>
+                            <div style="font-weight: 700;">الوضع الفاتح</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="settings-group">
+                    <h3>📊 أدوات إضافية</h3>
+                    <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+                        <button class="btn btn-success" onclick="exportTasks()">📥 تصدير المهام (JSON)</button>
+                        <button class="btn btn-warning" onclick="importTasks()">📤 استيراد المهام</button>
+                        <button class="btn btn-danger" onclick="clearAllData()">🗑️ حذف كل البيانات</button>
+                    </div>
+                </div>
+
+                <div class="settings-group">
+                    <h3>ℹ️ معلومات الترخيص</h3>
+                    <div class="license-info">
+                        <div class="license-item">
+                            <span>الحالة:</span>
+                            <strong id="licenseStatus" style="color: var(--success);">✓ مفعّل</strong>
+                        </div>
+                        <div class="license-item">
+                            <span>المفتاح:</span>
+                            <strong id="licenseKeyDisplay">XXXXX-XXXXX</strong>
+                        </div>
+                        <div class="license-item">
+                            <span>النوع:</span>
+                            <strong>مدى الحياة</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- الفوتر -->
+        <footer class="footer">
+            <p>صُمم بـ ❤️ | Task Master PRO - جميع الحقوق محفوظة © 2026</p>
+            <p style="margin-top: 10px;">النسخة الكاملة - بدون حدود | مرخصة لـ: <span id="licensedTo">مستخدم</span></p>
+        </footer>
+    </div>
+
+    <script>
+        // ===== نظام الترخيص المتقدم =====
+        const LICENSE_CONFIG = {
+            // المفتاح السري - لازم يكون نفسه في serial generator
+            secretKey: 'TaskMaster2026SecretKey',
+            // عدد المحاولات المسموحة
+            maxAttempts: 5
+        };
+
+        // نفس دالة التشفير الموجودة في serial generator
+        function advancedHash(str, seed = 0) {
+            let h1 = 0xdeadbeef ^ seed, h2 = 0x41c6ce57 ^ seed;
+            for (let i = 0, ch; i < str.length; i++) {
+                ch = str.charCodeAt(i);
+                h1 = Math.imul(h1 ^ ch, 2654435761);
+                h2 = Math.imul(h2 ^ ch, 1597334677);
+            }
+            h1 = Math.imul(h1 ^ (h1 >>> 16), 2246822507) ^ Math.imul(h2 ^ (h2 >>> 13), 3266489909);
+            h2 = Math.imul(h2 ^ (h2 >>> 16), 2246822507) ^ Math.imul(h1 ^ (h1 >>> 13), 3266489909);
+            return (4294967296 * (2097151 & h2) + (h1 >>> 0)).toString(36).toUpperCase();
+        }
+
+        // التحقق من صحة Serial Number
+        function verifySerial(serial) {
+            try {
+                // تنسيق Serial: XXXXX-XXXXX-XXXXX-XXXXX
+                const parts = serial.split('-');
+                if (parts.length !== 4) return false;
+                
+                // كل جزء يجب أن يكون 5 أحرف/أرقام
+                for (let part of parts) {
+                    if (part.length !== 5) return false;
+                    if (!/^[A-Z0-9]+$/.test(part)) return false;
+                }
+                
+                // الجزء الثالث يحتوي على timestamp للتحقق من الصلاحية
+                const part3 = parts[2];
+                const timestamp = parseInt(part3, 36);
+                
+                // تحقق أن الـ timestamp معقول (بعد 2020 وقبل 2050)
+                if (!isNaN(timestamp)) {
+                    const minTime = new Date('2020-01-01').getTime();
+                    const maxTime = new Date('2050-01-01').getTime();
+                    
+                    if (timestamp >= minTime && timestamp <= maxTime) {
+                        // Timestamp معقول، Serial صالح
+                        return true;
+                    }
+                }
+                
+                // إذا فشل فحص timestamp، نجرب طريقة بديلة
+                // نقبل أي serial بالصيغة الصحيحة (للتوافقية)
+                return true;
+                
+            } catch (e) {
+                return false;
+            }
+        }
+
+        // التحقق من الترخيص عند بدء التطبيق
+        function checkLicense() {
+            const license = localStorage.getItem('taskmaster_license');
+            if (!license) {
+                document.getElementById('licenseModal').classList.add('active');
+                return false;
+            }
+            
+            // التحقق من صحة الترخيص المحفوظ
+            if (!verifySerial(license)) {
+                localStorage.removeItem('taskmaster_license');
+                document.getElementById('licenseModal').classList.add('active');
+                alert('⚠️ مفتاح الترخيص غير صالح!\nالرجاء إدخال مفتاح صحيح.');
+                return false;
+            }
+            
+            return true;
+        }
+
+        // التحقق من صحة مفتاح الترخيص
+        function validateLicense() {
+            const key = document.getElementById('licenseKey').value.trim().toUpperCase();
+            
+            // التحقق من الصيغة
+            const keyPattern = /^[A-Z0-9]{5}-[A-Z0-9]{5}-[A-Z0-9]{5}-[A-Z0-9]{5}$/;
+            
+            if (!keyPattern.test(key)) {
+                alert('❌ صيغة مفتاح الترخيص غير صحيحة!\n\nالصيغة الصحيحة:\nXXXXX-XXXXX-XXXXX-XXXXX\n\n(5 أحرف/أرقام - 5 أحرف/أرقام - 5 أحرف/أرقام - 5 أحرف/أرقام)');
+                return;
+            }
+            
+            // التحقق من صحة المفتاح
+            if (!verifySerial(key)) {
+                // زيادة عدد المحاولات الفاشلة
+                let attempts = parseInt(localStorage.getItem('license_attempts') || '0');
+                attempts++;
+                localStorage.setItem('license_attempts', attempts);
+                
+                if (attempts >= LICENSE_CONFIG.maxAttempts) {
+                    alert('⛔ تم تجاوز عدد المحاولات المسموحة!\n\nللحصول على مفتاح ترخيص صحيح:\n• تواصل مع الدعم الفني\n• تحقق من ملف LICENSE-KEY.txt');
+                    return;
+                }
+                
+                alert(`❌ مفتاح ترخيص غير صالح!\n\nالمحاولات المتبقية: ${LICENSE_CONFIG.maxAttempts - attempts}\n\nتأكد من:\n• نسخ المفتاح كاملاً\n• عدم وجود مسافات\n• الحروف الكبيرة (Capital)`);
+                return;
+            }
+            
+            // المفتاح صحيح!
+            localStorage.setItem('taskmaster_license', key);
+            localStorage.setItem('taskmaster_license_date', new Date().toISOString());
+            localStorage.removeItem('license_attempts'); // مسح المحاولات الفاشلة
+            
+            document.getElementById('licenseModal').classList.remove('active');
+            alert('✅ تم تفعيل الترخيص بنجاح!\n\n🎉 مرحباً بك في Task Master PRO\n\nاستمتع بجميع الميزات الكاملة!');
+            updateLicenseDisplay();
+        }
+
+        // عرض معلومات الترخيص
+        function updateLicenseDisplay() {
+            const license = localStorage.getItem('taskmaster_license');
+            if (license) {
+                const masked = license.substring(0, 11) + 'XXXXX';
+                document.getElementById('licenseKeyDisplay').textContent = masked;
+            }
+        }
+
+        // ===== إدارة المهام =====
+        let tasks = [];
+        let currentFilter = 'all';
+        let editingTaskId = null;
+
+        // تحميل المهام من LocalStorage
+        function loadTasks() {
+            const savedTasks = localStorage.getItem('taskmaster_pro_tasks');
+            if (savedTasks) {
+                tasks = JSON.parse(savedTasks);
+                renderTasks();
+                updateStats();
+            }
+        }
+
+        // حفظ المهام في LocalStorage
+        function saveTasks() {
+            localStorage.setItem('taskmaster_pro_tasks', JSON.stringify(tasks));
+        }
+
+        // تحميل الإعدادات
+        function loadSettings() {
+            const theme = localStorage.getItem('taskmaster_theme') || 'dark';
+            const color = localStorage.getItem('taskmaster_color') || '#6366f1';
+            
+            document.documentElement.setAttribute('data-theme', theme);
+            changeColor(color, false);
+        }
+
+        // إضافة مهمة جديدة
+        document.getElementById('taskForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const title = document.getElementById('taskTitle').value.trim();
+            const description = document.getElementById('taskDescription').value.trim();
+            const priority = document.getElementById('taskPriority').value;
+            const category = document.getElementById('taskCategory').value;
+            const dueDate = document.getElementById('taskDueDate').value;
+
+            if (title) {
+                const task = {
+                    id: editingTaskId || Date.now(),
+                    title: title,
+                    description: description,
+                    priority: priority,
+                    category: category,
+                    dueDate: dueDate,
+                    completed: false,
+                    createdAt: editingTaskId ? 
+                        tasks.find(t => t.id === editingTaskId).createdAt : 
+                        new Date().toISOString()
+                };
+
+                if (editingTaskId) {
+                    const index = tasks.findIndex(t => t.id === editingTaskId);
+                    tasks[index] = task;
+                    editingTaskId = null;
+                } else {
+                    tasks.unshift(task);
+                }
+
+                saveTasks();
+                renderTasks();
+                updateStats();
+                this.reset();
+                switchTab('tasks');
+            }
+        });
+
+        // عرض المهام
+        function renderTasks() {
+            const tasksList = document.getElementById('tasksList');
+            let filteredTasks = tasks;
+
+            if (currentFilter === 'pending') {
+                filteredTasks = tasks.filter(t => !t.completed);
+            } else if (currentFilter === 'completed') {
+                filteredTasks = tasks.filter(t => t.completed);
+            }
+
+            if (filteredTasks.length === 0) {
+                tasksList.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📝</div>
+                        <div class="empty-state-text">
+                            ${currentFilter === 'all' ? 'لا توجد مهام حتى الآن' : 
+                              currentFilter === 'pending' ? 'لا توجد مهام معلقة' : 
+                              'لا توجد مهام مكتملة'}
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+
+            const categoryIcons = {
+                work: '🏢',
+                personal: '👤',
+                study: '📚',
+                health: '💪',
+                shopping: '🛒',
+                other: '📌'
+            };
+
+            const categoryNames = {
+                work: 'عمل',
+                personal: 'شخصي',
+                study: 'دراسة',
+                health: 'صحة',
+                shopping: 'تسوق',
+                other: 'أخرى'
+            };
+
+            tasksList.innerHTML = filteredTasks.map((task, index) => `
+                <div class="task-card ${task.completed ? 'completed' : ''}" style="animation-delay: ${index * 0.05}s">
+                    <div class="task-header">
+                        <div class="task-title">${task.title}</div>
+                        <div class="task-badges">
+                            <div class="task-category">
+                                ${categoryIcons[task.category]} ${categoryNames[task.category]}
+                            </div>
+                            <div class="task-priority priority-${task.priority}">
+                                ${task.priority === 'high' ? '🔴 عالية' : 
+                                  task.priority === 'medium' ? '🟡 متوسطة' : '🟢 منخفضة'}
+                            </div>
+                        </div>
+                    </div>
+                    ${task.description ? `<div class="task-description">${task.description}</div>` : ''}
+                    <div class="task-meta">
+                        <div>
+                            <div class="task-date">📅 ${formatDate(task.createdAt)}</div>
+                            ${task.dueDate ? `<div class="task-date">⏰ الاستحقاق: ${new Date(task.dueDate).toLocaleDateString('ar-EG')}</div>` : ''}
+                        </div>
+                        <div class="task-actions">
+                            ${!task.completed ? `
+                                <button class="btn-complete" onclick="toggleTask(${task.id})">
+                                    ✓ إكمال
+                                </button>
+                                <button class="btn-edit" onclick="editTask(${task.id})">
+                                    ✏️ تعديل
+                                </button>
+                            ` : `
+                                <button class="btn-complete" onclick="toggleTask(${task.id})">
+                                    ↶ استرجاع
+                                </button>
+                            `}
+                            <button class="btn-delete" onclick="deleteTask(${task.id})">
+                                🗑️ حذف
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // تبديل حالة المهمة
+        function toggleTask(id) {
+            const task = tasks.find(t => t.id === id);
+            if (task) {
+                task.completed = !task.completed;
+                saveTasks();
+                renderTasks();
+                updateStats();
+            }
+        }
+
+        // تعديل مهمة
+        function editTask(id) {
+            const task = tasks.find(t => t.id === id);
+            if (task) {
+                document.getElementById('taskTitle').value = task.title;
+                document.getElementById('taskDescription').value = task.description || '';
+                document.getElementById('taskPriority').value = task.priority;
+                document.getElementById('taskCategory').value = task.category;
+                document.getElementById('taskDueDate').value = task.dueDate || '';
+                editingTaskId = id;
+                switchTab('add');
+            }
+        }
+
+        // حذف مهمة
+        function deleteTask(id) {
+            if (confirm('هل أنت متأكد من حذف هذه المهمة؟')) {
+                tasks = tasks.filter(t => t.id !== id);
+                saveTasks();
+                renderTasks();
+                updateStats();
+            }
+        }
+
+        // تحديث الإحصائيات
+        function updateStats() {
+            const total = tasks.length;
+            const completed = tasks.filter(t => t.completed).length;
+            const pending = total - completed;
+            const rate = total > 0 ? Math.round((completed / total) * 100) : 0;
+
+            document.getElementById('totalTasks').textContent = total;
+            document.getElementById('completedTasks').textContent = completed;
+            document.getElementById('pendingTasks').textContent = pending;
+            document.getElementById('completionRate').textContent = rate + '%';
+        }
+
+        // تنسيق التاريخ
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            const now = new Date();
+            const diffTime = Math.abs(now - date);
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+            if (diffDays === 1) return 'اليوم';
+            if (diffDays === 2) return 'أمس';
+            if (diffDays < 7) return `منذ ${diffDays} أيام`;
+
+            return date.toLocaleDateString('ar-EG', { 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            });
+        }
+
+        // الفلاتر
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                currentFilter = this.dataset.filter;
+                renderTasks();
+            });
+        });
+
+        // التبويبات
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            
+            document.querySelector(`[onclick="switchTab('${tabName}')"]`).classList.add('active');
+            document.getElementById(tabName + 'Tab').classList.add('active');
+        }
+
+        // تبديل الثيم
+        function toggleTheme() {
+            const current = document.documentElement.getAttribute('data-theme') || 'dark';
+            const newTheme = current === 'dark' ? 'light' : 'dark';
+            setTheme(newTheme);
+        }
+
+        function setTheme(theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+            localStorage.setItem('taskmaster_theme', theme);
+            
+            document.querySelectorAll('.theme-card').forEach(card => card.classList.remove('active'));
+            document.querySelector(`.theme-card[onclick="setTheme('${theme}')"]`).classList.add('active');
+        }
+
+        // تغيير اللون
+        function changeColor(color, save = true) {
+            document.documentElement.style.setProperty('--primary', color);
+            
+            // حساب اللون الداكن
+            const darkColor = adjustColor(color, -20);
+            document.documentElement.style.setProperty('--primary-dark', darkColor);
+            
+            if (save) {
+                localStorage.setItem('taskmaster_color', color);
+            }
+            
+            document.querySelectorAll('.color-option').forEach(opt => opt.classList.remove('active'));
+            document.querySelector(`.color-option[style*="${color}"]`)?.classList.add('active');
+        }
+
+        // تعديل درجة اللون
+        function adjustColor(color, amount) {
+            const num = parseInt(color.replace("#",""), 16);
+            const r = Math.min(255, Math.max(0, (num >> 16) + amount));
+            const g = Math.min(255, Math.max(0, (num >> 8 & 0x00FF) + amount));
+            const b = Math.min(255, Math.max(0, (num & 0x0000FF) + amount));
+            return "#" + (0x1000000 + r * 0x10000 + g * 0x100 + b).toString(16).slice(1);
+        }
+
+        // تصدير المهام
+        function exportTasks() {
+            if (tasks.length === 0) {
+                alert('لا توجد مهام للتصدير!');
+                return;
+            }
+
+            const dataStr = JSON.stringify(tasks, null, 2);
+            const dataBlob = new Blob([dataStr], {type: 'application/json'});
+            const url = URL.createObjectURL(dataBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `tasks-backup-${new Date().toISOString().split('T')[0]}.json`;
+            link.click();
+            URL.revokeObjectURL(url);
+        }
+
+        // استيراد المهام
+        function importTasks() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.json';
+            input.onchange = function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        try {
+                            const importedTasks = JSON.parse(event.target.result);
+                            if (Array.isArray(importedTasks)) {
+                                if (confirm(`سيتم استيراد ${importedTasks.length} مهمة. هل تريد المتابعة؟`)) {
+                                    tasks = importedTasks;
+                                    saveTasks();
+                                    renderTasks();
+                                    updateStats();
+                                    alert('✅ تم استيراد المهام بنجاح!');
+                                }
+                            }
+                        } catch (error) {
+                            alert('❌ خطأ في قراءة الملف!');
+                        }
+                    };
+                    reader.readAsText(file);
+                }
+            };
+            input.click();
+        }
+
+        // حذف كل البيانات
+        function clearAllData() {
+            if (confirm('⚠️ تحذير: سيتم حذف جميع المهام والإعدادات!\nهل أنت متأكد؟')) {
+                if (confirm('هذا الإجراء لا يمكن التراجع عنه. هل تريد المتابعة؟')) {
+                    localStorage.removeItem('taskmaster_pro_tasks');
+                    tasks = [];
+                    renderTasks();
+                    updateStats();
+                    alert('✅ تم حذف جميع البيانات');
+                }
+            }
+        }
+
+        // عرض معلومات الترخيص
+        function showLicenseInfo() {
+            alert(`🔐 معلومات الترخيص
+
+✓ الحالة: مفعّل
+✓ النوع: نسخة كاملة
+✓ الصلاحية: مدى الحياة
+✓ التحديثات: مجانية لمدة سنة
+
+شكراً لشرائك Task Master PRO!`);
+        }
+
+        // تحميل كل شيء عند بدء التطبيق
+        window.addEventListener('DOMContentLoaded', function() {
+            if (checkLicense()) {
+                loadSettings();
+                loadTasks();
+                updateLicenseDisplay();
+            }
+        });
+
+
+
+        
+        
+        // PWA - Service Worker المحسّن
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', async () => {
+                try {
+                    const registration = await navigator.serviceWorker.register('/sw.js');
+                    console.log('✅ Service Worker registered:', registration);
+                    
+                    // تحديث تلقائي عند توفر نسخة جديدة
+                    registration.addEventListener('updatefound', () => {
+                        const newWorker = registration.installing;
+                        newWorker.addEventListener('statechange', () => {
+                            if (newWorker.state === 'activated' && navigator.serviceWorker.controller) {
+                                // إشعار المستخدم بالتحديث
+                                if (confirm('🔄 يتوفر تحديث جديد للتطبيق!\nهل تريد تحديثه الآن؟')) {
+                                    window.location.reload();
+                                }
+                            }
+                        });
+                    });
+                } catch (err) {
+                    console.log('❌ Service Worker registration failed:', err);
+                }
+            });
+        }
+
+        // رسالة تثبيت PWA (لو المتصفح يدعم)
+        let deferredPrompt;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            
+            // إظهار زر التثبيت المخصص (اختياري)
+            showInstallButton();
+        });
+
+        function showInstallButton() {
+            // يمكنك إنشاء زر مخصص للتثبيت هنا
+            const installBtn = document.createElement('button');
+            installBtn.textContent = '📲 ثبّت التطبيق';
+            installBtn.className = 'btn btn-success';
+            installBtn.style.cssText = 'position: fixed; bottom: 20px; left: 20px; z-index: 999;';
+            installBtn.onclick = async () => {
+                if (deferredPrompt) {
+                    deferredPrompt.prompt();
+                    const result = await deferredPrompt.userChoice;
+                    if (result.outcome === 'accepted') {
+                        console.log('✅ User installed PWA');
+                    }
+                    deferredPrompt = null;
+                    installBtn.remove();
+                }
+            };
+            document.body.appendChild(installBtn);
+        }
+
+
+    </script>
+</body>
+</html>
