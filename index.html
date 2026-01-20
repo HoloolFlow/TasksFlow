@@ -1126,13 +1126,13 @@
     <script>
         // ===== نظام الترخيص المتقدم =====
         const LICENSE_CONFIG = {
-            // المفتاح السري - لازم يكون نفسه في serial generator
-            secretKey: 'TaskMaster2026SecretKey',
+            // المفتاح السري - نفسه تماماً في serial generator
+            secretKey: 'TaskMaster2026SecretKey#XyZ!@$',
             // عدد المحاولات المسموحة
             maxAttempts: 5
         };
 
-        // نفس دالة التشفير الموجودة في serial generator
+        // نفس دالة التشفير الموجودة في serial generator (مهم جداً!)
         function advancedHash(str, seed = 0) {
             let h1 = 0xdeadbeef ^ seed, h2 = 0x41c6ce57 ^ seed;
             for (let i = 0, ch; i < str.length; i++) {
@@ -1145,39 +1145,58 @@
             return (4294967296 * (2097151 & h2) + (h1 >>> 0)).toString(36).toUpperCase();
         }
 
-        // التحقق من صحة Serial Number
+        // ===== التحقق الحقيقي من صحة Serial =====
         function verifySerial(serial) {
             try {
-                // تنسيق Serial: XXXXX-XXXXX-XXXXX-XXXXX
+                // 1. التحقق من الصيغة أولاً
                 const parts = serial.split('-');
                 if (parts.length !== 4) return false;
                 
-                // كل جزء يجب أن يكون 5 أحرف/أرقام
                 for (let part of parts) {
                     if (part.length !== 5) return false;
                     if (!/^[A-Z0-9]+$/.test(part)) return false;
                 }
                 
-                // الجزء الثالث يحتوي على timestamp للتحقق من الصلاحية
-                const part3 = parts[2];
-                const timestamp = parseInt(part3, 36);
+                // 2. استخراج الأجزاء
+                const [part1, part2, part3, part4] = parts;
                 
-                // تحقق أن الـ timestamp معقول (بعد 2020 وقبل 2050)
-                if (!isNaN(timestamp)) {
+                // 3. التحقق من timestamp (يجب أن يكون بعد 2020 وقبل 2050)
+                try {
+                    const timestampStr = part3;
+                    const timestamp = parseInt(timestampStr, 36);
                     const minTime = new Date('2020-01-01').getTime();
                     const maxTime = new Date('2050-01-01').getTime();
                     
-                    if (timestamp >= minTime && timestamp <= maxTime) {
-                        // Timestamp معقول، Serial صالح
+                    // إذا timestamp خارج النطاق المعقول
+                    if (timestamp < minTime || timestamp > maxTime) {
+                        // نجرب التحقق من checksum مباشرة
+                        // (لأن بعض الـ serials قد تستخدم encoding مختلف للـ part3)
+                    }
+                } catch(e) {
+                    // نكمل للتحقق من checksum
+                }
+                
+                // 4. ✅ التحقق الحقيقي: Checksum Validation
+                // نجرب كل أنواع الترخيص الممكنة
+                const licenseTypes = ['lifetime', 'yearly', 'monthly'];
+                
+                for (let licenseType of licenseTypes) {
+                    // إعادة حساب الـ checksum بنفس الطريقة
+                    const checksumData = part1 + part2 + part3 + LICENSE_CONFIG.secretKey + licenseType + 'VALID';
+                    const calculatedChecksum = advancedHash(checksumData, 99999).substring(0, 5);
+                    
+                    // مقارنة الـ checksum المحسوب مع الموجود في Serial
+                    if (calculatedChecksum === part4) {
+                        // ✅ Serial صحيح!
                         return true;
                     }
                 }
                 
-                // إذا فشل فحص timestamp، نجرب طريقة بديلة
-                // نقبل أي serial بالصيغة الصحيحة (للتوافقية)
-                return true;
+                // ❌ الـ checksum لا يطابق أي نوع ترخيص
+                return false;
                 
             } catch (e) {
+                console.error('خطأ في التحقق من Serial:', e);
                 return false;
             }
         }
@@ -1213,7 +1232,7 @@
                 return;
             }
             
-            // التحقق من صحة المفتاح
+            // ✅ التحقق الحقيقي من صحة المفتاح
             if (!verifySerial(key)) {
                 // زيادة عدد المحاولات الفاشلة
                 let attempts = parseInt(localStorage.getItem('license_attempts') || '0');
@@ -1221,15 +1240,15 @@
                 localStorage.setItem('license_attempts', attempts);
                 
                 if (attempts >= LICENSE_CONFIG.maxAttempts) {
-                    alert('⛔ تم تجاوز عدد المحاولات المسموحة!\n\nللحصول على مفتاح ترخيص صحيح:\n• تواصل مع الدعم الفني\n• تحقق من ملف LICENSE-KEY.txt');
+                    alert('⛔ تم تجاوز عدد المحاولات المسموحة!\n\nللحصول على مفتاح ترخيص صحيح:\n• تواصل مع الدعم الفني\n• تحقق من بريدك الإلكتروني');
                     return;
                 }
                 
-                alert(`❌ مفتاح ترخيص غير صالح!\n\nالمحاولات المتبقية: ${LICENSE_CONFIG.maxAttempts - attempts}\n\nتأكد من:\n• نسخ المفتاح كاملاً\n• عدم وجود مسافات\n• الحروف الكبيرة (Capital)`);
+                alert(`❌ مفتاح ترخيص غير صالح!\n\n⚠️ هذا المفتاح غير صحيح أو مزيّف!\n\nالمحاولات المتبقية: ${LICENSE_CONFIG.maxAttempts - attempts}\n\nتأكد من:\n• نسخ المفتاح كاملاً من البريد الإلكتروني\n• عدم وجود مسافات\n• الحروف الكبيرة (Capital)`);
                 return;
             }
             
-            // المفتاح صحيح!
+            // المفتاح صحيح! ✅
             localStorage.setItem('taskmaster_license', key);
             localStorage.setItem('taskmaster_license_date', new Date().toISOString());
             localStorage.removeItem('license_attempts'); // مسح المحاولات الفاشلة
